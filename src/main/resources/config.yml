@@ -1,0 +1,30 @@
+# Death Drops Item
+drop:
+  enable: true
+  support:
+    towny: true
+  head:
+    # When player death drops head,set 1 = 100%,default 0.5 SET 0 TO DISABLE
+    probability: 0.3
+  steal:
+    # When player death drops PlayerInventory's item,set 1 = 100%,default 0.5 SET 0 TO DISABLE
+    probability: 0.3
+    # Max slot count to drop
+    max: 5
+    # Filter item not drop
+    filter:
+      - 'NETHERITE_BOOTS'
+      - 'NETHERITE_CHESTPLATE'
+      - 'NETHERITE_HELMET'
+      - 'NETHERITE_LEGGINGS'
+      - 'NETHERITE_SWORD'
+      - 'BOW'
+      - 'DIAMOND_BOOTS'
+      - 'DIAMOND_CHESTPLATE'
+      - 'DIAMOND_HELMET'
+      - 'DIAMOND_LEGGINGS'
+      - 'DIAMOND_SWORD'
+      - 'ARROW'
+      - 'TRIDENT'
+      - 'SHIELD'
+      - 'CROSSBOW'

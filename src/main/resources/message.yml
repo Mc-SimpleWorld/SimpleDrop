@@ -1,0 +1,9 @@
+death_drop:
+  inventory: 'PVP死亡裁决触发,随机掉落了%s格背包物品'
+  head: 'PVP死亡裁决触发,你的头颅掉落了...'
+
+registry:
+  death_success: '死亡裁决模块注册成功'
+
+disregistry:
+  death_success: '死亡裁决模块移除'
