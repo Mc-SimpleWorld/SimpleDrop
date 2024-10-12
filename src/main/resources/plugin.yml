@@ -7,3 +7,9 @@ website: https://github.com/isnott
 api-version: 1.20
 prefix: SimpleDrop
 depend: []
+
+commands:
+  simpledrop:
+    description: '死亡裁决'
+    usage: '未知命令'
+    aliases: 'sd'

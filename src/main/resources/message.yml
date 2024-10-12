@@ -7,3 +7,7 @@ registry:
 
 disregistry:
   death_success: '死亡裁决模块移除'
+
+common:
+  not_per: '你没有权限执行该命令'
+  reloaded: '插件重载成功'

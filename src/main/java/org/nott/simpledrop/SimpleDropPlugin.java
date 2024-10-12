@@ -26,19 +26,25 @@ public final class SimpleDropPlugin extends JavaPlugin {
     public void onEnable() {
         // Plugin startup logic
         saveDefaultConfig();
+        this.pluginInit();
         FileConfiguration config = this.getConfig();
-        MESSAGE_YML_FILE = (YamlConfiguration) config;
         PluginManager pluginManager = this.getServer().getPluginManager();
+        if (config.getBoolean(KeyWord.CONFIG.DROP_ENABLE)) {
+            pluginManager.registerEvents(new SwDeathListener(), this);
+            logger.info(MESSAGE_YML_FILE.getString(KeyWord.CONFIG.REG_DEATH));
+        }
+    }
+
+    public void pluginInit(){
+        saveConfig();
+        CONFIG_YML_FILE = (YamlConfiguration) this.getConfig();
         YamlConfiguration message = new YamlConfiguration();
         try {
             message.load(Objects.requireNonNull(this.getTextResource(GlobalFactory.MESSAGE_YML)));
         } catch (IOException | InvalidConfigurationException e) {
             throw new RuntimeException(e);
         }
-        if (config.getBoolean(KeyWord.CONFIG.DROP_ENABLE)) {
-            pluginManager.registerEvents(new SwDeathListener(), this);
-            logger.info(message.getString(KeyWord.CONFIG.REG_DEATH));
-        }
+        MESSAGE_YML_FILE = message;
     }
 
     @Override
