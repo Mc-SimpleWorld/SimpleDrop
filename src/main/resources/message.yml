@@ -11,3 +11,25 @@ disregistry:
 common:
   not_per: '你没有权限执行该命令'
   reloaded: '插件重载成功'
+  next: '输入%s查看下一页'
+  exception: '发生内部异常,查看控制台日志以检查'
+  player_not_found: '没有找到玩家 %s'
+
+offer:
+  already_offer: '你已经对 %s 发出了悬赏,金额为'
+  create_offer: '成功对 %s 发出了悬赏,金额为'
+  add_offer_success: '成功叠加对 %s 的悬赏'
+  another_offering: '其他玩家已经对 %s 进行悬赏,金额为 %s'
+  add_offer: '玩家 %s 的悬赏金增加到 %s'
+  add_using: '需要叠加悬赏金额使用 /offer add <玩家> <金额>'
+  get_reward: '你击杀了 %s,获得悬赏金 '
+  amount_invalid: '金额只能为整数'
+  new_offer: '一位玩家对%s 进行了悬赏,金额 %s,狩猎愉快'
+  offer_end: '对玩家 %s悬赏已经结束'
+  concurrence_offer: '另一位玩家同时正在进行悬赏叠加,请重试'
+help:
+  offer:
+    - '/offer list 查看服务器悬赏列表'
+    - '/offer <玩家名称> <金额> 发出一份悬赏'
+    - '/offer add <玩家> <金额> 叠加某位玩家的悬赏金额'
+

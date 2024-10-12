@@ -28,3 +28,9 @@ drop:
       - 'TRIDENT'
       - 'SHIELD'
       - 'CROSSBOW'
+
+# Offer a reward
+offer:
+  enable: true
+  support:
+    towny: true

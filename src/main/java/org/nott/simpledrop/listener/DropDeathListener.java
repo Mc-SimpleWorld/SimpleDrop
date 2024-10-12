@@ -32,7 +32,7 @@ import java.util.Objects;
  * @author Nott
  * @date 2024-10-12
  */
-public class SwDeathListener implements Listener {
+public class DropDeathListener implements Listener {
 
     // Drop player head probability while death.
     @EventHandler(priority = EventPriority.NORMAL)
@@ -47,23 +47,7 @@ public class SwDeathListener implements Listener {
             }
             Player killer = (Player) damageCauseEntity;
             YamlConfiguration config = SimpleDropPlugin.CONFIG_YML_FILE;
-            if(config.getBoolean("drop.support.towny",false)){
-                TownyAPI townyAPI = TownyAPI.getInstance();
-                Nation deadNation = townyAPI.getNation(dead);
-                Nation killerNation = townyAPI.getNation(killer);
-                Town killerTown = townyAPI.getTown(killer);
-                Town deadTown = townyAPI.getTown(dead);
-                if(deadNation != null && killerNation != null){
-                    if(deadNation.getName().equals(killerNation.getName())){
-                        return;
-                    }
-                }
-                if(killerTown != null && deadTown != null){
-                    if(killerTown.getName().equals(deadTown.getName())){
-                        return;
-                    }
-                }
-            }
+            if (SwUtil.deathEventSupport4Towny("drop",dead, killer)) return;
             handlePlayerHeadDrop(event, dead);
             handlePlayerInvDrop(event, dead);
         }

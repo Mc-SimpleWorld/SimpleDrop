@@ -13,3 +13,7 @@ commands:
     description: '死亡裁决'
     usage: '未知命令'
     aliases: 'sd'
+  offer:
+    description: '悬赏系统'
+    usage: '未知命令,使用/<command> help 查看帮助'
+    aliases: 'of'

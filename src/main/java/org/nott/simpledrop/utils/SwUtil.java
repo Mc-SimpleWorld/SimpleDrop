@@ -5,6 +5,9 @@ package org.nott.simpledrop.utils;
  * @date 2024-10-12
  */
 
+import com.palmergames.bukkit.towny.TownyAPI;
+import com.palmergames.bukkit.towny.object.Nation;
+import com.palmergames.bukkit.towny.object.Town;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.*;
@@ -13,8 +16,11 @@ import org.bukkit.block.data.BlockData;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
+import org.nott.simpledrop.SimpleDropPlugin;
 import org.nott.simpledrop.global.GlobalFactory;
+import org.nott.simpledrop.global.KeyWord;
 
 import javax.annotation.Nullable;
 import java.io.File;
@@ -197,6 +203,27 @@ public class SwUtil {
         Block block = defWorld.getBlockAt((int) x, (int) y, (int) z);
         BlockData blockData = block.getBlockData();
         return chunk.contains(blockData);
+    }
+
+    public static boolean deathEventSupport4Towny(String featPrefix, Player dead, Player killer) {
+        if(SimpleDropPlugin.CONFIG_YML_FILE.getBoolean(featPrefix + "." + KeyWord.CONFIG.SUPPORT_TOWNY,false)){
+            TownyAPI townyAPI = TownyAPI.getInstance();
+            Nation deadNation = townyAPI.getNation(dead);
+            Nation killerNation = townyAPI.getNation(killer);
+            Town killerTown = townyAPI.getTown(killer);
+            Town deadTown = townyAPI.getTown(dead);
+            if(deadNation != null && killerNation != null){
+                if(deadNation.getName().equals(killerNation.getName())){
+                    return true;
+                }
+            }
+            if(killerTown != null && deadTown != null){
+                if(killerTown.getName().equals(deadTown.getName())){
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
 }
