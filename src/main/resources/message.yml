@@ -27,6 +27,8 @@ offer:
   new_offer: '一位玩家对%s 进行了悬赏,金额 %s,狩猎愉快'
   offer_end: '对玩家 %s悬赏已经结束'
   concurrence_offer: '另一位玩家同时正在进行悬赏叠加,请重试'
+  bal_not_enough: '你没有足够的金钱'
+  same_group: '%s 与你同属一个组织,无法悬赏'
 help:
   offer:
     - '/offer list 查看服务器悬赏列表'

@@ -39,7 +39,7 @@ public class OfferDeathListener implements Listener {
                 return;
             }
             Player killer = (Player) damageCauseEntity;
-            if (SwUtil.deathEventSupport4Towny("offer", dead, killer)) return;
+            if (SwUtil.checkSupport4Towny("offer", dead, killer)) return;
             SimpleDropPlugin simpleDropPlugin = getPlugin();
             SimpleDropPlugin.SCHEDULER.runTaskAsynchronously(simpleDropPlugin, () -> {
                 try {

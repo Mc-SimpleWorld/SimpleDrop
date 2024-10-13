@@ -2,7 +2,7 @@
 drop:
   enable: true
   support:
-    towny: true
+    towny: false
   head:
     # When player death drops head,set 1 = 100%,default 0.5 SET 0 TO DISABLE
     probability: 0.3
@@ -33,4 +33,4 @@ drop:
 offer:
   enable: true
   support:
-    towny: true
+    towny: false

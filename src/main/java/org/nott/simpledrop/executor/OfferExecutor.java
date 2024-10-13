@@ -1,6 +1,7 @@
 package org.nott.simpledrop.executor;
 
 import lombok.Data;
+import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -52,6 +53,17 @@ public class OfferExecutor implements CommandExecutor {
                 SwUtil.sendMessage2Sender(commandSender, msg, ChatColor.YELLOW);
                 return true;
             }
+            String offer = commandSender.getName();
+            Player offerPlayer = simpleDropPlugin.getServer().getPlayerExact(offer);
+            boolean support4Towny = SimpleDropPlugin.CONFIG_YML_FILE.getBoolean("offer.support.towny", false);
+            if(support4Towny && SwUtil.checkSupport4Towny("offer", offerPlayer, playerExact)){
+                String msg = String.format(SimpleDropPlugin.MESSAGE_YML_FILE.getString("offer.same_group"), name);
+                SwUtil.sendMessage2Sender(commandSender,msg,ChatColor.RED);
+                return true;
+            }
+            if (!withdrawCommandSender(commandSender, simpleDropPlugin, amountInt)) {
+                return true;
+            }
             final Integer finalAmount = amountInt;
             SimpleDropPlugin.SCHEDULER.runTaskAsynchronously(simpleDropPlugin, () -> {
                 try {
@@ -94,6 +106,17 @@ public class OfferExecutor implements CommandExecutor {
                 return true;
             }
             final Integer originAmount = amountInt;
+            String offer = commandSender.getName();
+            Player offerPlayer = simpleDropPlugin.getServer().getPlayerExact(offer);
+            boolean support4Towny = SimpleDropPlugin.CONFIG_YML_FILE.getBoolean("offer.support.towny", false);
+            if(support4Towny && SwUtil.checkSupport4Towny("offer", offerPlayer, playerExact)){
+                String msg = String.format(SimpleDropPlugin.MESSAGE_YML_FILE.getString("offer.same_group"), name);
+                SwUtil.sendMessage2Sender(commandSender,msg,ChatColor.RED);
+                return true;
+            }
+            if (!withdrawCommandSender(commandSender, simpleDropPlugin, amountInt)) {
+                return true;
+            }
             SimpleDropPlugin.SCHEDULER.runTaskAsynchronously(simpleDropPlugin, () -> {
                 try {
                     Connection con = SqlLiteManager.getConnect();
@@ -128,5 +151,15 @@ public class OfferExecutor implements CommandExecutor {
             return true;
         }
         return false;
+    }
+
+    private static boolean withdrawCommandSender(CommandSender commandSender, SimpleDropPlugin simpleDropPlugin, int amountInt) {
+        String offer = commandSender.getName();
+        Player offerPlayer = simpleDropPlugin.getServer().getPlayerExact(offer);
+        EconomyResponse resp = SimpleDropPlugin.ECONOMY.withdrawPlayer(offerPlayer, amountInt);
+        if (!resp.transactionSuccess()) {
+            SwUtil.sendMessage2Sender(commandSender,SimpleDropPlugin.MESSAGE_YML_FILE.getString("offer.bal_not_enough"), ChatColor.RED);
+        }
+        return resp.transactionSuccess();
     }
 }

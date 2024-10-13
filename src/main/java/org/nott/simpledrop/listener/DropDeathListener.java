@@ -1,8 +1,5 @@
 package org.nott.simpledrop.listener;
 
-import com.palmergames.bukkit.towny.TownyAPI;
-import com.palmergames.bukkit.towny.object.Nation;
-import com.palmergames.bukkit.towny.object.Town;
 import org.apache.commons.lang3.RandomUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -47,7 +44,7 @@ public class DropDeathListener implements Listener {
             }
             Player killer = (Player) damageCauseEntity;
             YamlConfiguration config = SimpleDropPlugin.CONFIG_YML_FILE;
-            if (SwUtil.deathEventSupport4Towny("drop",dead, killer)) return;
+            if (SwUtil.checkSupport4Towny("drop",dead, killer)) return;
             handlePlayerHeadDrop(event, dead);
             handlePlayerInvDrop(event, dead);
         }

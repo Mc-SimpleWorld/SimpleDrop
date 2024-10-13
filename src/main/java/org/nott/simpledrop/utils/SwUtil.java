@@ -205,13 +205,13 @@ public class SwUtil {
         return chunk.contains(blockData);
     }
 
-    public static boolean deathEventSupport4Towny(String featPrefix, Player dead, Player killer) {
+    public static boolean checkSupport4Towny(String featPrefix, Player player, Player anotherPlayer) {
         if(SimpleDropPlugin.CONFIG_YML_FILE.getBoolean(featPrefix + "." + KeyWord.CONFIG.SUPPORT_TOWNY,false)){
             TownyAPI townyAPI = TownyAPI.getInstance();
-            Nation deadNation = townyAPI.getNation(dead);
-            Nation killerNation = townyAPI.getNation(killer);
-            Town killerTown = townyAPI.getTown(killer);
-            Town deadTown = townyAPI.getTown(dead);
+            Nation deadNation = townyAPI.getNation(player);
+            Nation killerNation = townyAPI.getNation(anotherPlayer);
+            Town killerTown = townyAPI.getTown(anotherPlayer);
+            Town deadTown = townyAPI.getTown(player);
             if(deadNation != null && killerNation != null){
                 if(deadNation.getName().equals(killerNation.getName())){
                     return true;
