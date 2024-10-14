@@ -44,6 +44,7 @@ public final class SimpleDropPlugin extends JavaPlugin {
             logger.info(MESSAGE_YML_FILE.getString(KeyWord.CONFIG.REG_DEATH));
         }
         if (config.getBoolean(KeyWord.CONFIG.OFFER_ENABLE)) {
+            SqlLiteManager.checkDbFileIsExist(this);
             SqlLiteManager.createTableIfNotExist(KeyWord.TABLE.OFFER,KeyWord.TABLE.OFFER_CREATE_SQL);
             pluginManager.registerEvents(new OfferDeathListener(), this);
         }

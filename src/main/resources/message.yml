@@ -14,6 +14,8 @@ common:
   next: '输入%s查看下一页'
   exception: '发生内部异常,查看控制台日志以检查'
   player_not_found: '没有找到玩家 %s'
+  db_not_found: '%s没有找到数据库文件'
+  copy_db_error: '新建数据库文件出错:'
 
 offer:
   already_offer: '你已经对 %s 发出了悬赏,金额为'
