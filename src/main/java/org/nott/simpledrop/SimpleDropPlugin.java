@@ -15,6 +15,7 @@ import org.nott.simpledrop.listener.DropDeathListener;
 import org.nott.simpledrop.listener.OfferDeathListener;
 import org.nott.simpledrop.manager.SqlLiteManager;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Objects;
 import java.util.logging.Logger;
@@ -54,14 +55,25 @@ public final class SimpleDropPlugin extends JavaPlugin {
         saveConfig();
         CONFIG_YML_FILE = (YamlConfiguration) this.getConfig();
         YamlConfiguration message = new YamlConfiguration();
-        try {
-            message.load(Objects.requireNonNull(this.getTextResource(GlobalFactory.MESSAGE_YML)));
-        } catch (IOException | InvalidConfigurationException e) {
-            throw new RuntimeException(e);
+        String path = this.getDataFolder() + File.separator + GlobalFactory.MESSAGE_YML;
+        File file = new File(path);
+        if (!file.exists()) {
+            this.saveResource(GlobalFactory.MESSAGE_YML, false);
+            try {
+                message.load(Objects.requireNonNull(this.getTextResource(GlobalFactory.MESSAGE_YML)));
+            } catch (IOException | InvalidConfigurationException e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            try {
+                message.load(file);
+            } catch (IOException | InvalidConfigurationException e) {
+                throw new RuntimeException(e);
+            }
         }
         MESSAGE_YML_FILE = message;
-        RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
-        ECONOMY = rsp.getProvider();
+//        RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
+//        ECONOMY = rsp.getProvider();
     }
 
     @Override

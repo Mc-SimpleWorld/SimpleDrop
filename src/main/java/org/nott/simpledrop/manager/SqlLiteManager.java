@@ -1,13 +1,10 @@
 package org.nott.simpledrop.manager;
 
-import com.google.common.io.Files;
 import org.bukkit.plugin.Plugin;
-import org.nott.simpledrop.SimpleDropPlugin;
 import org.nott.simpledrop.global.GlobalFactory;
 import org.nott.simpledrop.utils.SwUtil;
 
 import java.io.File;
-import java.io.IOException;
 import java.sql.*;
 
 /**
@@ -16,7 +13,7 @@ import java.sql.*;
  */
 public class SqlLiteManager {
 
-    public static final String DB_PATH = "plugins/" + GlobalFactory.PLUGIN_NAME + "/database.db";
+    public static final String DB_PATH = "plugins/" + GlobalFactory.PLUGIN_NAME + "/org/nott/simpledrop/db/database.db";
 
     public static Connection getConnect() throws Exception {
         Class.forName("org.sqlite.JDBC");
@@ -28,17 +25,17 @@ public class SqlLiteManager {
         if (file.exists()) {
             return;
         }
-        String dbFilePath = plugin.getDataFolder() + "/org/nott/simpledrop/db/database.bd";
-        File dbFile = new File(dbFilePath);
-        if (!dbFile.exists()) {
-            throw new RuntimeException(String.format(SimpleDropPlugin.MESSAGE_YML_FILE.getString("common.db_not_found"), dbFile));
-        }
-        try {
-            Files.copy(dbFile, file);
-        } catch (IOException e) {
-            SwUtil.log(SimpleDropPlugin.MESSAGE_YML_FILE.getString("common.copy_db_error") + e.getMessage());
-            throw new RuntimeException(e);
-        }
+        plugin.saveResource("org.nott.simpledrop.db.database.db",false);
+//        File dbFile = new File(dbFilePath);
+//        if (!dbFile.exists()) {
+//            throw new RuntimeException(String.format(SimpleDropPlugin.MESSAGE_YML_FILE.getString("common.db_not_found"), dbFile));
+//        }
+//        try {
+//            Files.copy(dbFile, file);
+//        } catch (IOException e) {
+//            SwUtil.log(SimpleDropPlugin.MESSAGE_YML_FILE.getString("common.copy_db_error") + e.getMessage());
+//            throw new RuntimeException(e);
+//        }
     }
 
     public static void createTableIfNotExist(String tableName, String sql) {
