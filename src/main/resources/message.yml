@@ -1,4 +1,4 @@
-prefix: 'SimpleDrop'
+prefix: 'SW悬赏系统'
 
 death_drop:
   inventory: 'PVP死亡裁决触发,随机掉落了%s格背包物品'
@@ -21,6 +21,11 @@ common:
   db_not_found: '%s没有找到数据库文件'
   copy_db_error: '新建数据库文件出错:'
   create_tab_error: '创建数据库表%s出错'
+  page_format_error: '页码数字不正确'
+  page_info: '---- 页码 %s - %s -----'
+  page_next: '输入%s 查看下一页'
+  not_next: '已显示全部信息'
+  only_support_player: '指令只能由玩家使用'
 
 offer:
   already_offer: '你已经对 %s 发出了悬赏,金额为'
@@ -33,12 +38,15 @@ offer:
   amount_invalid: '金额只能为整数'
   new_offer: '一位玩家对%s 进行了悬赏,金额 %s,狩猎愉快'
   offer_end: '对玩家 %s悬赏已经结束'
-  concurrence_offer: '另一位玩家同时正在进行悬赏叠加,请重试'
+  concurrence_offer: '另一位玩家同时正在进行悬赏叠加,悬赏金将原路返回,请稍后重试'
   bal_not_enough: '你没有足够的金钱'
   same_group: '%s 与你同属一个组织,无法悬赏'
+  list_info: '名称: %s ,悬赏金额: %s'
+  not_self: '不能悬赏自己'
+  refund_error: '退回玩家悬赏金失败：'
 help:
   offer:
-    - '/offer list 查看服务器悬赏列表'
+    - '/offer page 查看服务器悬赏列表'
     - '/offer <玩家名称> <金额> 发出一份悬赏'
     - '/offer add <玩家> <金额> 叠加某位玩家的悬赏金额'
 

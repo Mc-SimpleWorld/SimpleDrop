@@ -61,7 +61,7 @@ public class SwUtil {
         return obj != null && !"".equals(obj);
     }
 
-    public static boolean isNull(Object obj){
+    public static boolean isNull(Object obj) {
         return !isNotNull(obj);
     }
 
@@ -176,9 +176,19 @@ public class SwUtil {
     }
 
     public static void sendMessage2Sender(CommandSender sender, String message, @Nullable ChatColor color) {
+        sendMessage2Sender(false,sender,message,color);
+    }
+
+    public static void sendMessage2Sender(boolean withPrefix, CommandSender sender, String message, @Nullable ChatColor color) {
+        String prefix = getPrefix();
         sender.spigot().sendMessage(
-                TextComponent.fromLegacy(color + message)
+                TextComponent.fromLegacy(color + prefix + message)
         );
+    }
+
+    private static String getPrefix() {
+        String prefix = "[" + SimpleDropPlugin.MESSAGE_YML_FILE.getString("prefix") + "] ";
+        return prefix;
     }
 
     public static <T extends CommandSender.Spigot> void spigotTextMessage(T spigot, String message, ChatColor color) {
@@ -188,6 +198,13 @@ public class SwUtil {
     }
 
     public static void broadcast(String msg, ChatColor color) {
+        broadcast(false,getPrefix() + msg,color);
+    }
+
+    public static void broadcast(boolean withPrefix, String msg, ChatColor color) {
+        if(withPrefix){
+            msg = getPrefix() + msg;
+        }
         Bukkit.spigot().broadcast(
                 TextComponent.fromLegacy(msg, color.asBungee())
         );
@@ -206,19 +223,19 @@ public class SwUtil {
     }
 
     public static boolean checkSupport4Towny(String featPrefix, Player player, Player anotherPlayer) {
-        if(SimpleDropPlugin.CONFIG_YML_FILE.getBoolean(featPrefix + "." + KeyWord.CONFIG.SUPPORT_TOWNY,false)){
+        if (SimpleDropPlugin.CONFIG_YML_FILE.getBoolean(featPrefix + "." + KeyWord.CONFIG.SUPPORT_TOWNY, false)) {
             TownyAPI townyAPI = TownyAPI.getInstance();
             Nation deadNation = townyAPI.getNation(player);
             Nation killerNation = townyAPI.getNation(anotherPlayer);
             Town killerTown = townyAPI.getTown(anotherPlayer);
             Town deadTown = townyAPI.getTown(player);
-            if(deadNation != null && killerNation != null){
-                if(deadNation.getName().equals(killerNation.getName())){
+            if (deadNation != null && killerNation != null) {
+                if (deadNation.getName().equals(killerNation.getName())) {
                     return true;
                 }
             }
-            if(killerTown != null && deadTown != null){
-                if(killerTown.getName().equals(deadTown.getName())){
+            if (killerTown != null && deadTown != null) {
+                if (killerTown.getName().equals(deadTown.getName())) {
                     return true;
                 }
             }

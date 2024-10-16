@@ -50,7 +50,7 @@ public final class SimpleDropPlugin extends JavaPlugin {
         if (config.getBoolean(KeyWord.CONFIG.OFFER_ENABLE)) {
             SqlLiteManager.checkDbFileIsExist(this);
             SqlLiteManager.createTableIfNotExist(KeyWord.TABLE.OFFER,KeyWord.TABLE.OFFER_CREATE_SQL);
-            pluginManager.registerEvents(new OfferDeathListener(), this);
+            pluginManager.registerEvents(new OfferDeathListener(this), this);
             this.getCommand(KeyWord.COMMAND.OFFER).setExecutor(new OfferExecutor(this));
             RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
             ECONOMY = rsp.getProvider();

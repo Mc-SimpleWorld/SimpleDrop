@@ -29,6 +29,10 @@ public class OfferDeathListener implements Listener {
 
     private SimpleDropPlugin plugin;
 
+    public OfferDeathListener(SimpleDropPlugin plugin) {
+        this.plugin = plugin;
+    }
+
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerDeathEvent(PlayerDeathEvent event) {
         Player dead = event.getEntity();
