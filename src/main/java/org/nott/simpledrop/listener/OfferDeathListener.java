@@ -18,6 +18,7 @@ import org.nott.simpledrop.utils.SwUtil;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.Objects;
 
 /**
  * @author Nott
@@ -55,7 +56,7 @@ public class OfferDeathListener implements Listener {
 
                     SimpleDropPlugin.ECONOMY.depositPlayer(killer, totalAmount);
                     SwUtil.spigotTextMessage(killer.spigot()
-                            , String.format(SimpleDropPlugin.MESSAGE_YML_FILE.getString(KeyWord.MSG.OFFER_GET_REWARD), dead.getName()) + totalAmount
+                            , String.format(Objects.requireNonNull(SimpleDropPlugin.MESSAGE_YML_FILE.getString(KeyWord.MSG.OFFER_GET_REWARD)), dead.getName()) + totalAmount
                             , ChatColor.GOLD);
                 } catch (Exception e) {
                     throw new RuntimeException(e);

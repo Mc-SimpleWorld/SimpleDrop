@@ -7,6 +7,8 @@ website: https://github.com/isnott
 api-version: 1.20
 prefix: SimpleDrop
 depend: ['Vault']
+loadbefore:
+  - Vault
 
 commands:
   simpledrop:

@@ -19,6 +19,10 @@ public class SimpleDropExecutor implements CommandExecutor {
 
     private SimpleDropPlugin plugin;
 
+    public SimpleDropExecutor(SimpleDropPlugin plugin) {
+        this.plugin = plugin;
+    }
+
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String label, String[] args) {
         if (args.length == 1 && "reload".equals(args[0])) {

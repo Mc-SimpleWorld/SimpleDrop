@@ -9,6 +9,8 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
+import org.nott.simpledrop.executor.OfferExecutor;
+import org.nott.simpledrop.executor.SimpleDropExecutor;
 import org.nott.simpledrop.global.GlobalFactory;
 import org.nott.simpledrop.global.KeyWord;
 import org.nott.simpledrop.listener.DropDeathListener;
@@ -42,13 +44,25 @@ public final class SimpleDropPlugin extends JavaPlugin {
         SCHEDULER = this.getServer().getScheduler();
         if (config.getBoolean(KeyWord.CONFIG.DROP_ENABLE)) {
             pluginManager.registerEvents(new DropDeathListener(), this);
+            this.getCommand(KeyWord.COMMAND.SD).setExecutor(new SimpleDropExecutor(this));
             logger.info(MESSAGE_YML_FILE.getString(KeyWord.CONFIG.REG_DEATH));
         }
         if (config.getBoolean(KeyWord.CONFIG.OFFER_ENABLE)) {
             SqlLiteManager.checkDbFileIsExist(this);
             SqlLiteManager.createTableIfNotExist(KeyWord.TABLE.OFFER,KeyWord.TABLE.OFFER_CREATE_SQL);
             pluginManager.registerEvents(new OfferDeathListener(), this);
+            this.getCommand(KeyWord.COMMAND.OFFER).setExecutor(new OfferExecutor(this));
+            RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
+            ECONOMY = rsp.getProvider();
+            logger.info(MESSAGE_YML_FILE.getString(KeyWord.CONFIG.REG_OFFER));
         }
+    }
+
+    @Override
+    public void onDisable() {
+        // Plugin shutdown logic
+        logger.info(MESSAGE_YML_FILE.getString(KeyWord.CONFIG.DIS_REG_DEATH));
+        logger.info(MESSAGE_YML_FILE.getString(KeyWord.CONFIG.DIS_REG_OFFER));
     }
 
     public void pluginInit(){
@@ -72,13 +86,5 @@ public final class SimpleDropPlugin extends JavaPlugin {
             }
         }
         MESSAGE_YML_FILE = message;
-//        RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
-//        ECONOMY = rsp.getProvider();
-    }
-
-    @Override
-    public void onDisable() {
-        // Plugin shutdown logic
-        logger.info(MESSAGE_YML_FILE.getString(KeyWord.CONFIG.DIS_REG_DEATH));
     }
 }

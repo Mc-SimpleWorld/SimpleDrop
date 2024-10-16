@@ -32,7 +32,7 @@ import java.util.Objects;
 public class DropDeathListener implements Listener {
 
     // Drop player head probability while death.
-    @EventHandler(priority = EventPriority.NORMAL)
+    @EventHandler(priority = EventPriority.LOW)
     public void onPlayerDeathEvent(PlayerDeathEvent event) {
         Player dead = event.getEntity();
         EntityDamageEvent lastDamageCause = dead.getLastDamageCause();
@@ -43,7 +43,6 @@ public class DropDeathListener implements Listener {
                 return;
             }
             Player killer = (Player) damageCauseEntity;
-            YamlConfiguration config = SimpleDropPlugin.CONFIG_YML_FILE;
             if (SwUtil.checkSupport4Towny("drop",dead, killer)) return;
             handlePlayerHeadDrop(event, dead);
             handlePlayerInvDrop(event, dead);

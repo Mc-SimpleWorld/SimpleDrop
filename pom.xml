@@ -48,10 +48,9 @@
                 <filtering>true</filtering>
             </resource>
             <resource>
-                <directory>src/main/java</directory>
-                <includes>
-                    <include>**/*.db</include>
-                </includes>
+                <directory>${project.basedir}/libs</directory>
+                <!-- 输出在classes的目录 -->
+                <targetPath>libs</targetPath>
                 <filtering>false</filtering>
             </resource>
         </resources>
@@ -102,6 +101,14 @@
             <artifactId>commons-lang3</artifactId>
             <version>3.12.0</version>
         </dependency>
+
+        <!-- https://mvnrepository.com/artifact/commons-dbutils/commons-dbutils -->
+        <dependency>
+            <groupId>commons-dbutils</groupId>
+            <artifactId>commons-dbutils</artifactId>
+            <version>1.8.1</version>
+        </dependency>
+
 
         <dependency>
             <groupId>com.palmergames.bukkit.towny</groupId>

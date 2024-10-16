@@ -1,6 +1,8 @@
 package org.nott.simpledrop.manager;
 
+import org.apache.commons.dbutils.DbUtils;
 import org.bukkit.plugin.Plugin;
+import org.nott.simpledrop.SimpleDropPlugin;
 import org.nott.simpledrop.global.GlobalFactory;
 import org.nott.simpledrop.utils.SwUtil;
 
@@ -13,11 +15,11 @@ import java.sql.*;
  */
 public class SqlLiteManager {
 
-    public static final String DB_PATH = "plugins/" + GlobalFactory.PLUGIN_NAME + "/org/nott/simpledrop/db/database.db";
+    public static final String DB_PATH = "plugins/" + GlobalFactory.PLUGIN_NAME + "/libs/database.db";
 
     public static Connection getConnect() throws Exception {
         Class.forName("org.sqlite.JDBC");
-        return DriverManager.getConnection("jdbc:sqlite:plugins/" + GlobalFactory.PLUGIN_NAME + "/src/main/db/database.db");
+        return DriverManager.getConnection("jdbc:sqlite:plugins/" + GlobalFactory.PLUGIN_NAME + "/libs/database.db");
     }
 
     public static void checkDbFileIsExist(Plugin plugin) {
@@ -25,31 +27,32 @@ public class SqlLiteManager {
         if (file.exists()) {
             return;
         }
-        plugin.saveResource("org.nott.simpledrop.db.database.db",false);
-//        File dbFile = new File(dbFilePath);
-//        if (!dbFile.exists()) {
-//            throw new RuntimeException(String.format(SimpleDropPlugin.MESSAGE_YML_FILE.getString("common.db_not_found"), dbFile));
-//        }
-//        try {
-//            Files.copy(dbFile, file);
-//        } catch (IOException e) {
-//            SwUtil.log(SimpleDropPlugin.MESSAGE_YML_FILE.getString("common.copy_db_error") + e.getMessage());
-//            throw new RuntimeException(e);
-//        }
+        plugin.saveResource("libs/database.db",false);
     }
 
     public static void createTableIfNotExist(String tableName, String sql) {
+        Connection connect = null;
+        PreparedStatement statement = null;
         try {
-            Connection connect = getConnect();
-            PreparedStatement statement = connect.prepareStatement("SELECT name FROM sqlite_master WHERE type='table' AND name= ?");
+            connect = getConnect();
+            statement = connect.prepareStatement("SELECT name FROM sqlite_master WHERE type='table' AND name= ?");
             statement.setString(1, tableName);
             ResultSet set = statement.executeQuery();
-            if (set.wasNull()) {
-                Statement cs = connect.createStatement();
-                cs.execute(sql);
+            boolean hasTable = false;
+            while (set.next()){
+                if (tableName.equals(set.getString("name"))) {
+                    hasTable = true;
+                }
+            }
+            if(!hasTable){
+                PreparedStatement prepared = connect.prepareStatement(sql);
+                prepared.execute();
             }
         } catch (Exception e) {
-            SwUtil.log("Create table error:" + e.getMessage());
+            SwUtil.log(String.format(SimpleDropPlugin.MESSAGE_YML_FILE.getString("common.create_tab_error"), tableName) + e.getMessage());
+        } finally {
+            DbUtils.closeQuietly(connect);
+            DbUtils.closeQuietly(statement);
         }
     }
 

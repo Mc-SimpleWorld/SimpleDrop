@@ -13,7 +13,9 @@ public interface KeyWord {
         String DROP_FILTER = "drop.filter";
         String SUPPORT_TOWNY = "support.towny";
         String REG_DEATH = "registry.death_success";
+        String REG_OFFER = "registry.offer_success";
         String DIS_REG_DEATH = "disregistry.death_success";
+        String DIS_REG_OFFER = "disregistry.offer_success";
     }
 
     interface TABLE {
@@ -23,5 +25,10 @@ public interface KeyWord {
 
     interface MSG {
         String OFFER_GET_REWARD = "offer.get_reward";
+    }
+
+    interface COMMAND{
+        String SD = "simpledrop";
+        String OFFER = "offer";
     }
 }

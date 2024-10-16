@@ -2,6 +2,7 @@ package org.nott.simpledrop.executor;
 
 import lombok.Data;
 import net.milkbowl.vault.economy.EconomyResponse;
+import org.apache.commons.dbutils.DbUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -26,10 +27,14 @@ public class OfferExecutor implements CommandExecutor {
 
     private SimpleDropPlugin plugin;
 
+    public OfferExecutor(SimpleDropPlugin plugin) {
+        this.plugin = plugin;
+    }
+
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String label, String[] args) {
         if (args.length == 1 && "help".equals(args[0])) {
-            List<String> list = SimpleDropPlugin.CONFIG_YML_FILE.getStringList("help.offer");
+            List<String> list = SimpleDropPlugin.MESSAGE_YML_FILE.getStringList("help.offer");
             StringBuffer bf = new StringBuffer();
             for (String str : list) {
                 bf.append(ChatColor.GOLD + str).append("\n");
@@ -66,9 +71,12 @@ public class OfferExecutor implements CommandExecutor {
             }
             final Integer finalAmount = amountInt;
             SimpleDropPlugin.SCHEDULER.runTaskAsynchronously(simpleDropPlugin, () -> {
+                PreparedStatement ps = null;
+                PreparedStatement pst = null;
+                Connection con = null;
                 try {
-                    Connection con = SqlLiteManager.getConnect();
-                    PreparedStatement ps = con.prepareStatement("select * from offer_info where id = ?");
+                    con = SqlLiteManager.getConnect();
+                    ps = con.prepareStatement("select * from offer_info where id = ?");
                     ps.setString(1, name);
                     ResultSet resultSet = ps.executeQuery();
                     if (resultSet.next()) {
@@ -76,7 +84,7 @@ public class OfferExecutor implements CommandExecutor {
                         SwUtil.sendMessage2Sender(commandSender, msg, ChatColor.YELLOW);
                         return;
                     }
-                    PreparedStatement pst = con.prepareStatement("insert into offer_info(id,amount) values (?,?)");
+                    pst = con.prepareStatement("insert into offer_info(id,amount) values (?,?)");
                     pst.setString(1, name);
                     pst.setInt(2, finalAmount);
                     pst.execute();
@@ -85,6 +93,10 @@ public class OfferExecutor implements CommandExecutor {
                     SwUtil.broadcast(SimpleDropPlugin.MESSAGE_YML_FILE.getString("offer.new_offer"), ChatColor.GOLD);
                 } catch (Exception e) {
                     throw new RuntimeException(e);
+                } finally {
+                    DbUtils.closeQuietly(con);
+                    DbUtils.closeQuietly(ps);
+                    DbUtils.closeQuietly(pst);
                 }
             });
             return true;
@@ -118,8 +130,10 @@ public class OfferExecutor implements CommandExecutor {
                 return true;
             }
             SimpleDropPlugin.SCHEDULER.runTaskAsynchronously(simpleDropPlugin, () -> {
+                Connection con = null;
+                PreparedStatement preparedStatement = null;
                 try {
-                    Connection con = SqlLiteManager.getConnect();
+                    con = SqlLiteManager.getConnect();
                     PreparedStatement ps = con.prepareStatement("select * from offer_info where id = ?");
                     ps.setString(1, name);
                     ResultSet resultSet = ps.executeQuery();
@@ -132,7 +146,7 @@ public class OfferExecutor implements CommandExecutor {
                     while (resultSet.next()){
                         total += resultSet.getInt("amount");
                     }
-                    PreparedStatement preparedStatement = con.prepareStatement("update offer_info set amount = ? where id = ? and amount = ?");
+                    preparedStatement = con.prepareStatement("update offer_info set amount = ? where id = ? and amount = ?");
                     preparedStatement.setInt(1,total);
                     preparedStatement.setString(2,name);
                     preparedStatement.setInt(3,originAmount);
@@ -146,6 +160,9 @@ public class OfferExecutor implements CommandExecutor {
                     }
                 } catch (Exception e) {
                     throw new RuntimeException(e);
+                } finally {
+                    DbUtils.closeQuietly(con);
+                    DbUtils.closeQuietly(preparedStatement);
                 }
             });
             return true;

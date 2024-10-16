@@ -1,21 +1,26 @@
+prefix: 'SimpleDrop'
+
 death_drop:
   inventory: 'PVP死亡裁决触发,随机掉落了%s格背包物品'
   head: 'PVP死亡裁决触发,你的头颅掉落了...'
 
 registry:
   death_success: '死亡裁决模块注册成功'
+  offer_success: '悬赏模块注册成功'
 
 disregistry:
   death_success: '死亡裁决模块移除'
+  offer_success: '悬赏模块移除'
 
 common:
   not_per: '你没有权限执行该命令'
-  reloaded: '插件重载成功'
+  reloaded: 'SimpleDrop插件重载成功'
   next: '输入%s查看下一页'
   exception: '发生内部异常,查看控制台日志以检查'
   player_not_found: '没有找到玩家 %s'
   db_not_found: '%s没有找到数据库文件'
   copy_db_error: '新建数据库文件出错:'
+  create_tab_error: '创建数据库表%s出错'
 
 offer:
   already_offer: '你已经对 %s 发出了悬赏,金额为'

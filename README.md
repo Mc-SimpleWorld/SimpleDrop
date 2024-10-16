@@ -1,2 +1,16 @@
 # SimpleDrop
-A Minecraft Death Drop plugin.
+
+SimpleWorld使用的死亡掉落插件。
+
+## 功能
+死亡裁决：玩家PVP死亡时随机掉落 X 格子数量物品
+掉落头颅
+
+悬赏玩家：玩家可提供金币悬赏其他玩家
+
+## 配置
+可配置项：头颅掉落几率、物品格子数量、死亡裁决触发记录
+
+## 支持
+Towny
+Vault
