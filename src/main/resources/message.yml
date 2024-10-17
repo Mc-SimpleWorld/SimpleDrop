@@ -30,6 +30,7 @@ common:
 offer:
   already_offer: '你已经对 %s 发出了悬赏,金额为'
   create_offer: '成功对 %s 发出了悬赏,金额为'
+  offer_tax: '悬赏税收已收取,金额 '
   add_offer_success: '成功叠加对 %s 的悬赏'
   another_offering: '其他玩家已经对 %s 进行悬赏,金额为 %s'
   add_offer: '玩家 %s 的悬赏金增加到 %s'

@@ -1,6 +1,7 @@
 package org.nott.simpledrop.listener;
 
 import lombok.Data;
+import org.apache.commons.dbutils.DbUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -43,27 +44,42 @@ public class OfferDeathListener implements Listener {
             if (!(damageCauseEntity instanceof Player)) {
                 return;
             }
-            Player killer = (Player) damageCauseEntity;
+            Entity damager = ((EntityDamageByEntityEvent) lastDamageCause).getDamager();
+            Player killer = (Player)damager;
             if (SwUtil.checkSupport4Towny("offer", dead, killer)) return;
             SimpleDropPlugin simpleDropPlugin = getPlugin();
             SimpleDropPlugin.SCHEDULER.runTaskAsynchronously(simpleDropPlugin, () -> {
+                Connection con = null;
+                PreparedStatement ps = null;
                 try {
-                    Connection con = SqlLiteManager.getConnect();
-                    PreparedStatement ps = con.prepareStatement("select * from offer_info where id = ?");
+                    con = SqlLiteManager.getConnect();
+                    ps = con.prepareStatement("select * from offer_info where id = ?");
                     ps.setString(1, dead.getName());
                     ResultSet resultSet = ps.executeQuery();
                     int totalAmount = 0;
+                    if(!resultSet.next())return;
                     while (resultSet.next()) {
                         int amount = resultSet.getInt("amount");
                         totalAmount += amount;
                     }
-
-                    SimpleDropPlugin.ECONOMY.depositPlayer(killer, totalAmount);
-                    SwUtil.spigotTextMessage(killer.spigot()
-                            , String.format(Objects.requireNonNull(SimpleDropPlugin.MESSAGE_YML_FILE.getString(KeyWord.MSG.OFFER_GET_REWARD)), dead.getName()) + totalAmount
-                            , ChatColor.GOLD);
+                    int tax = SimpleDropPlugin.CONFIG_YML_FILE.getInt("offer.tax");
+                    int reward = totalAmount - tax;
+                    if (SimpleDropPlugin.ECONOMY.depositPlayer(killer, reward).transactionSuccess()) {
+                        ps = con.prepareStatement("delete from offer_info where id = ?");
+                        ps.setString(1,dead.getName());
+                        ps.execute();
+                        SwUtil.spigotTextMessage(killer.spigot()
+                                , SimpleDropPlugin.MESSAGE_YML_FILE.getString("offer.offer_tax") + tax
+                                , ChatColor.GOLD);
+                        SwUtil.spigotTextMessage(killer.spigot()
+                                , String.format(Objects.requireNonNull(SimpleDropPlugin.MESSAGE_YML_FILE.getString(KeyWord.MSG.OFFER_GET_REWARD)), dead.getName()) + reward
+                                , ChatColor.GOLD);
+                    }
                 } catch (Exception e) {
                     throw new RuntimeException(e);
+                } finally {
+                    DbUtils.closeQuietly(ps);
+                    DbUtils.closeQuietly(con);
                 }
             });
         }

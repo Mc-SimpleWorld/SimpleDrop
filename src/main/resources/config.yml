@@ -34,3 +34,5 @@ offer:
   enable: true
   support:
     towny: false
+  # tax of give an offer
+  tax: 10

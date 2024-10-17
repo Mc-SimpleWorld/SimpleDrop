@@ -128,7 +128,8 @@ public class OfferExecutor implements CommandExecutor {
                 SwUtil.sendMessage2Sender(true, commandSender, msg, ChatColor.RED);
                 return true;
             }
-            if (!withdrawCommandSender(commandSender, simpleDropPlugin, amountInt)) {
+            int tax = SimpleDropPlugin.CONFIG_YML_FILE.getInt("offer.tax",10);
+            if (!withdrawCommandSender(commandSender, simpleDropPlugin, amountInt + tax)) {
                 return true;
             }
             final Integer finalAmount = amountInt;
@@ -152,6 +153,7 @@ public class OfferExecutor implements CommandExecutor {
                     pst.execute();
                     String msg = String.format(Objects.requireNonNull(SimpleDropPlugin.MESSAGE_YML_FILE.getString("offer.create_offer")), name) + finalAmount;
                     SwUtil.sendMessage2Sender(true, commandSender, msg, ChatColor.GREEN);
+                    SwUtil.sendMessage2Sender(true, commandSender, SimpleDropPlugin.MESSAGE_YML_FILE.getString("offer.offer_tax") + tax, ChatColor.DARK_GREEN);
                     SwUtil.broadcast(true, String.format(Objects.requireNonNull(SimpleDropPlugin.MESSAGE_YML_FILE.getString("offer.new_offer")), name, finalAmount), ChatColor.GOLD);
                 } catch (Exception e) {
                     throw new RuntimeException(e);
@@ -191,7 +193,8 @@ public class OfferExecutor implements CommandExecutor {
                 SwUtil.sendMessage2Sender(true, commandSender, msg, ChatColor.RED);
                 return true;
             }
-            if (!withdrawCommandSender(commandSender, simpleDropPlugin, addAmount)) {
+            int tax = SimpleDropPlugin.CONFIG_YML_FILE.getInt("offer.tax",10);
+            if (!withdrawCommandSender(commandSender, simpleDropPlugin, addAmount + tax)){
                 return true;
             }
             SimpleDropPlugin.SCHEDULER.runTaskAsynchronously(simpleDropPlugin, () -> {
@@ -223,10 +226,11 @@ public class OfferExecutor implements CommandExecutor {
                     if (effect > 0) {
                         String msg = String.format(Objects.requireNonNull(SimpleDropPlugin.MESSAGE_YML_FILE.getString("offer.add_offer_success")), name);
                         SwUtil.sendMessage2Sender(true, commandSender, msg, ChatColor.GREEN);
+                        SwUtil.sendMessage2Sender(true, commandSender, SimpleDropPlugin.MESSAGE_YML_FILE.getString("offer.offer_tax") + tax, ChatColor.DARK_GREEN);
                         SwUtil.broadcast(String.format(Objects.requireNonNull(SimpleDropPlugin.MESSAGE_YML_FILE.getString("offer.add_offer")), name, total), ChatColor.GOLD);
                     } else {
                         SwUtil.sendMessage2Sender(true, commandSender, SimpleDropPlugin.MESSAGE_YML_FILE.getString("offer.concurrence_offer"), ChatColor.RED);
-                        refund(sender,SimpleDropPlugin.ECONOMY,addAmount);
+                        refund(sender,SimpleDropPlugin.ECONOMY,addAmount + tax);
                     }
                 } catch (Exception e) {
                     throw new RuntimeException(e);
