@@ -181,8 +181,25 @@ public class SwUtil {
 
     public static void sendMessage2Sender(boolean withPrefix, CommandSender sender, String message, @Nullable ChatColor color) {
         String prefix = getPrefix();
+        if(withPrefix){
+            message = prefix + message;
+        }
         sender.spigot().sendMessage(
                 TextComponent.fromLegacy(color + prefix + message)
+        );
+    }
+
+    public static void sendMessage(Player player,String msg,@Nullable ChatColor color){
+        sendMessage(false, player, msg, color);
+    }
+
+    public static void sendMessage(boolean withPrefix,Player player,String msg,@Nullable ChatColor color){
+        String prefix = getPrefix();
+        if (withPrefix) {
+            msg = prefix + msg;
+        }
+        player.spigot().sendMessage(
+                TextComponent.fromLegacy(color + msg)
         );
     }
 

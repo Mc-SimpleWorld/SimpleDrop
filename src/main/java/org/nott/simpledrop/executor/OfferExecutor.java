@@ -4,7 +4,9 @@ import lombok.Data;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.economy.EconomyResponse;
 import org.apache.commons.dbutils.DbUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Server;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -134,6 +136,8 @@ public class OfferExecutor implements CommandExecutor {
             }
             final Integer finalAmount = amountInt;
             SimpleDropPlugin.SCHEDULER.runTaskAsynchronously(simpleDropPlugin, () -> {
+                Player sender = (Player) commandSender;
+                Server server = Bukkit.getServer();
                 PreparedStatement ps = null;
                 PreparedStatement pst = null;
                 Connection con = null;
@@ -152,9 +156,17 @@ public class OfferExecutor implements CommandExecutor {
                     pst.setInt(2, finalAmount);
                     pst.execute();
                     String msg = String.format(Objects.requireNonNull(SimpleDropPlugin.MESSAGE_YML_FILE.getString("offer.create_offer")), name) + finalAmount;
-                    SwUtil.sendMessage2Sender(true, commandSender, msg, ChatColor.GREEN);
-                    SwUtil.sendMessage2Sender(true, commandSender, SimpleDropPlugin.MESSAGE_YML_FILE.getString("offer.offer_tax") + tax, ChatColor.DARK_GREEN);
-                    SwUtil.broadcast(true, String.format(Objects.requireNonNull(SimpleDropPlugin.MESSAGE_YML_FILE.getString("offer.new_offer")), name, finalAmount), ChatColor.GOLD);
+                    server.getOnlinePlayers().forEach(p -> {
+                        String pName = p.getName();
+                        if (name.equals(pName)) {
+                            SwUtil.sendMessage(true,p, String.format(SimpleDropPlugin.MESSAGE_YML_FILE.getString("offer.player_offered"), finalAmount),ChatColor.RED);
+                        } else if (sender.getName().equals(pName)) {
+                            SwUtil.sendMessage2Sender(true, commandSender, msg, ChatColor.GREEN);
+                            SwUtil.sendMessage2Sender(true, commandSender, SimpleDropPlugin.MESSAGE_YML_FILE.getString("offer.offer_tax") + tax, ChatColor.DARK_GREEN);
+                        } else {
+                            SwUtil.sendMessage(true, p, String.format(Objects.requireNonNull(SimpleDropPlugin.MESSAGE_YML_FILE.getString("offer.new_offer")), name, finalAmount), ChatColor.GOLD);
+                        }
+                    });
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 } finally {
@@ -198,6 +210,7 @@ public class OfferExecutor implements CommandExecutor {
                 return true;
             }
             SimpleDropPlugin.SCHEDULER.runTaskAsynchronously(simpleDropPlugin, () -> {
+                Server server = Bukkit.getServer();
                 Connection con = null;
                 PreparedStatement preparedStatement = null;
                 int originAmount = 0;
@@ -225,9 +238,18 @@ public class OfferExecutor implements CommandExecutor {
                     int effect = preparedStatement.executeUpdate();
                     if (effect > 0) {
                         String msg = String.format(Objects.requireNonNull(SimpleDropPlugin.MESSAGE_YML_FILE.getString("offer.add_offer_success")), name);
-                        SwUtil.sendMessage2Sender(true, commandSender, msg, ChatColor.GREEN);
-                        SwUtil.sendMessage2Sender(true, commandSender, SimpleDropPlugin.MESSAGE_YML_FILE.getString("offer.offer_tax") + tax, ChatColor.DARK_GREEN);
-                        SwUtil.broadcast(String.format(Objects.requireNonNull(SimpleDropPlugin.MESSAGE_YML_FILE.getString("offer.add_offer")), name, total), ChatColor.GOLD);
+                        final Integer finalOfferAmount = total;
+                        server.getOnlinePlayers().forEach(p -> {
+                            String pName = p.getName();
+                            if (name.equals(pName)) {
+                                SwUtil.sendMessage(true, p, String.format(SimpleDropPlugin.MESSAGE_YML_FILE.getString("offer.player_add_offered"), finalOfferAmount), ChatColor.RED);
+                            } else if (sender.getName().equals(pName)) {
+                                SwUtil.sendMessage2Sender(true, commandSender, msg, ChatColor.GREEN);
+                                SwUtil.sendMessage2Sender(true, commandSender, SimpleDropPlugin.MESSAGE_YML_FILE.getString("offer.offer_tax") + tax, ChatColor.DARK_GREEN);
+                            } else {
+                                SwUtil.sendMessage(true, p, String.format(Objects.requireNonNull(SimpleDropPlugin.MESSAGE_YML_FILE.getString("offer.add_offer")), name, finalOfferAmount), ChatColor.GOLD);
+                            }
+                        });
                     } else {
                         SwUtil.sendMessage2Sender(true, commandSender, SimpleDropPlugin.MESSAGE_YML_FILE.getString("offer.concurrence_offer"), ChatColor.RED);
                         refund(sender,SimpleDropPlugin.ECONOMY,addAmount + tax);

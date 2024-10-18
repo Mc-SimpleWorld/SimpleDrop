@@ -19,10 +19,7 @@ import org.nott.simpledrop.SimpleDropPlugin;
 import org.nott.simpledrop.global.KeyWord;
 import org.nott.simpledrop.utils.SwUtil;
 
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 
 /**
@@ -71,13 +68,13 @@ public class DropDeathListener implements Listener {
                         return true;
                     }
                     for (String itemName : filterList) {
-                        Material material = Material.getMaterial(itemName);
+                        Material material = Material.getMaterial(itemName, true);
                         if (SwUtil.isNull(material)) continue;
                         if (r.getType().equals(material)) {
-                            return true;
+                            return false;
                         }
                     }
-                    return false;
+                    return true;
                 })
                 .toList();
         int contentLength = contentContainItem.size();
