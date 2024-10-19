@@ -9,6 +9,7 @@ public class GlobalFactory {
     public static final String PLUGIN_NAME = "SimpleDrop";
 
     public static final String MESSAGE_YML = "message.yml";
+    public static final String CONFIG_YML = "config.yml";
 
     public static final String COMMON_MSG_SUFFIX = "common";
 }
