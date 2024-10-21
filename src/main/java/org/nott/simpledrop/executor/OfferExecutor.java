@@ -72,8 +72,10 @@ public class OfferExecutor implements CommandExecutor {
                     while (rs.next()) {
                         String id = rs.getString("id");
                         int amount = rs.getInt("amount");
+                        String msg = String.format(Objects.requireNonNull(SimpleDropPlugin.MESSAGE_YML_FILE.getString("offer.list_info")), id, amount);
+                        msg += ">>> ";
                         SwUtil.sendMessage2Sender(commandSender,
-                                String.format(Objects.requireNonNull(SimpleDropPlugin.MESSAGE_YML_FILE.getString("offer.list_info")), id, amount),
+                                msg,
                                 ChatColor.RED);
                     }
                     ps = con.prepareStatement("select count(1) as num from offer_info");
