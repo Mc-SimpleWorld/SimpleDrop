@@ -10,7 +10,7 @@ public interface KeyWord {
         String DROP_HEAD_PROB = "drop.head.probability";
         String DROP_STEAL_PROB = "drop.steal.probability";
         String DROP_STEAL_MAX = "drop.steal.max";
-        String DROP_FILTER = "drop.filter";
+        String DROP_FILTER = "drop.steal.filter";
         String SUPPORT_TOWNY = "support.towny";
         String REG_DEATH = "registry.death_success";
         String REG_OFFER = "registry.offer_success";

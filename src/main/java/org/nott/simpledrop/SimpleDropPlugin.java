@@ -39,15 +39,14 @@ public final class SimpleDropPlugin extends JavaPlugin {
         // Plugin startup logic
         saveDefaultConfig();
         this.pluginInit();
-        FileConfiguration config = this.getConfig();
         PluginManager pluginManager = this.getServer().getPluginManager();
         SCHEDULER = this.getServer().getScheduler();
-        if (config.getBoolean(KeyWord.CONFIG.DROP_ENABLE)) {
-            pluginManager.registerEvents(new DropDeathListener(), this);
+        if (CONFIG_YML_FILE.getBoolean(KeyWord.CONFIG.DROP_ENABLE)) {
+            pluginManager.registerEvents(new DropDeathListener(this), this);
             this.getCommand(KeyWord.COMMAND.SD).setExecutor(new SimpleDropExecutor(this));
             logger.info(MESSAGE_YML_FILE.getString(KeyWord.CONFIG.REG_DEATH));
         }
-        if (config.getBoolean(KeyWord.CONFIG.OFFER_ENABLE)) {
+        if (CONFIG_YML_FILE.getBoolean(KeyWord.CONFIG.OFFER_ENABLE)) {
             SqlLiteManager.checkDbFileIsExist(this);
             SqlLiteManager.createTableIfNotExist(KeyWord.TABLE.OFFER,KeyWord.TABLE.OFFER_CREATE_SQL);
             pluginManager.registerEvents(new OfferDeathListener(this), this);
@@ -66,11 +65,12 @@ public final class SimpleDropPlugin extends JavaPlugin {
     }
 
     public void pluginInit(){
-        saveConfig();
-        CONFIG_YML_FILE = (YamlConfiguration) this.getConfig();
         YamlConfiguration message = new YamlConfiguration();
+        YamlConfiguration config = new YamlConfiguration();
         String path = this.getDataFolder() + File.separator + GlobalFactory.MESSAGE_YML;
+        String configPath = this.getDataFolder() + File.separator + GlobalFactory.CONFIG_YML;
         File file = new File(path);
+        File configFile = new File(configPath);
         if (!file.exists()) {
             this.saveResource(GlobalFactory.MESSAGE_YML, false);
             try {
@@ -85,6 +85,21 @@ public final class SimpleDropPlugin extends JavaPlugin {
                 throw new RuntimeException(e);
             }
         }
+        if (!configFile.exists()) {
+            this.saveResource(GlobalFactory.MESSAGE_YML, false);
+            try {
+                config.load(Objects.requireNonNull(this.getTextResource(GlobalFactory.MESSAGE_YML)));
+            } catch (IOException | InvalidConfigurationException e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            try {
+                config.load(configFile);
+            } catch (IOException | InvalidConfigurationException e) {
+                throw new RuntimeException(e);
+            }
+        }
         MESSAGE_YML_FILE = message;
+        CONFIG_YML_FILE = config;
     }
 }
