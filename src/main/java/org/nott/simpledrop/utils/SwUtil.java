@@ -185,7 +185,7 @@ public class SwUtil {
             message = prefix + message;
         }
         sender.spigot().sendMessage(
-                TextComponent.fromLegacy(color + prefix + message)
+                TextComponent.fromLegacy(color + message)
         );
     }
 

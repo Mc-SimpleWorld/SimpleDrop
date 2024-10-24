@@ -39,12 +39,10 @@ public class OfferDeathListener implements Listener {
         Player dead = event.getEntity();
         EntityDamageEvent lastDamageCause = dead.getLastDamageCause();
         if (lastDamageCause instanceof EntityDamageByEntityEvent) {
-            EntityDamageByEntityEvent damageCause = (EntityDamageByEntityEvent) lastDamageCause;
-            Entity damageCauseEntity = damageCause.getEntity();
-            if (!(damageCauseEntity instanceof Player)) {
+            Entity damager = ((EntityDamageByEntityEvent) lastDamageCause).getDamager();
+            if (!(damager instanceof Player)) {
                 return;
             }
-            Entity damager = ((EntityDamageByEntityEvent) lastDamageCause).getDamager();
             Player killer = (Player)damager;
             if (SwUtil.checkSupport4Towny("offer", dead, killer)) return;
             SimpleDropPlugin simpleDropPlugin = getPlugin();
