@@ -41,12 +41,11 @@ public class DropDeathListener implements Listener {
         Player dead = event.getEntity();
         EntityDamageEvent lastDamageCause = dead.getLastDamageCause();
         if (lastDamageCause instanceof EntityDamageByEntityEvent) {
-            EntityDamageByEntityEvent damageCause = (EntityDamageByEntityEvent) lastDamageCause;
-            Entity damageCauseEntity = damageCause.getEntity();
-            if (!(damageCauseEntity instanceof Player)) {
+            Entity damager = ((EntityDamageByEntityEvent) lastDamageCause).getDamager();
+            if (!(damager instanceof Player)) {
                 return;
             }
-            Player killer = (Player) damageCauseEntity;
+            Player killer = (Player) damager;
             if (SwUtil.checkSupport4Towny("drop",dead, killer)) return;
             handlePlayerHeadDrop(event, dead);
             handlePlayerInvDrop(event, dead);
@@ -63,51 +62,6 @@ public class DropDeathListener implements Listener {
         if (probability < RandomUtils.nextDouble(0.0, 1.0)) {
             return;
         }
-//        SimpleDropPlugin.SCHEDULER.runTaskAsynchronously(getPlugin(),()->{
-//            int dropInvCount = RandomUtils.nextInt(1, config.getInt(KeyWord.CONFIG.DROP_STEAL_MAX, 3));
-//            PlayerInventory inventory = dead.getInventory();
-//            ItemStack[] contents = inventory.getContents();
-//            // Filter Player's armor and weapon(sword + bow + .....).
-//            List<String> filterList = config.getStringList(KeyWord.CONFIG.DROP_FILTER);
-//            List<ItemStack> contentContainItem = SwUtil.isEmpty(filterList) ? new ArrayList<>() : Arrays.stream(contents)
-//                    .filter(Objects::nonNull)
-//                    .filter(r -> {
-//                        for (String itemName : filterList) {
-//                            Material material = Material.getMaterial(itemName, true);
-//                            if (SwUtil.isNull(material)) continue;
-//                            if (r.getType().equals(material)) {
-//                                return true;
-//                            }
-//                        }
-//                        return false;
-//                    })
-//                    .toList();
-//            int contentLength = contentContainItem.size();
-//            if (SwUtil.isEmpty(contentContainItem) || contentLength == 0) {
-//                return;
-//            }
-//            // Drop death player's item
-//            if (contentLength <= dropInvCount) {
-//                event.getDrops().addAll(contentContainItem);
-//                if (SwUtil.isEmpty(contentContainItem)) return;
-//                dropInvCount = contentLength;
-//                inventory.removeItem(contentContainItem.toArray(new ItemStack[0]));
-//            } else {
-//                List<ItemStack> drops = new LinkedList<>();
-//                for (int i = 0; i < dropInvCount; i++) {
-//                    int removeIndex = RandomUtils.nextInt(0, contentLength);
-//                    ItemStack itemStack = contentContainItem.get(removeIndex);
-//                    drops.add(itemStack);
-//                    inventory.removeItem(itemStack);
-//                }
-//                if (SwUtil.isEmpty(drops)) return;
-//                inventory.removeItem(drops.toArray(new ItemStack[0]));
-//                event.getDrops().addAll(drops);
-//            }
-//            SwUtil.spigotTextMessage(dead.spigot()
-//                    , String.format(messageFile.getString(KeyWord.CONFIG.DROP_INVENTORY), dropInvCount)
-//                    , ChatColor.RED);
-//        });
         int dropInvCount = RandomUtils.nextInt(1, config.getInt(KeyWord.CONFIG.DROP_STEAL_MAX, 3));
         PlayerInventory inventory = dead.getInventory();
         ItemStack[] contents = inventory.getContents();
