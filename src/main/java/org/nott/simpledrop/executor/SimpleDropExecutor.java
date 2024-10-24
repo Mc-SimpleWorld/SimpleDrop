@@ -28,7 +28,12 @@ public class SimpleDropExecutor implements CommandExecutor {
         if (args.length == 1 && "reload".equals(args[0])) {
             if (commandSender.isOp()) {
                 plugin.pluginInit();
-                commandSender.spigot().sendMessage(TextComponent.fromLegacy(net.md_5.bungee.api.ChatColor.GREEN + SwUtil.retMessage(SimpleDropPlugin.MESSAGE_YML_FILE, GlobalFactory.COMMON_MSG_SUFFIX, "reloaded")));
+                boolean isConsole = "console".equalsIgnoreCase(commandSender.getName());
+                if (isConsole) {
+                  SwUtil.log(SimpleDropPlugin.MESSAGE_YML_FILE.getString(GlobalFactory.COMMON_MSG_SUFFIX + "reloaded"));
+                } else {
+                    commandSender.spigot().sendMessage(TextComponent.fromLegacy(net.md_5.bungee.api.ChatColor.GREEN + SwUtil.retMessage(SimpleDropPlugin.MESSAGE_YML_FILE, GlobalFactory.COMMON_MSG_SUFFIX, "reloaded")));
+                }
                 return true;
             } else {
                 commandSender.sendMessage(ChatColor.RED + SwUtil.retMessage(SimpleDropPlugin.MESSAGE_YML_FILE, GlobalFactory.COMMON_MSG_SUFFIX, "not_per"));
