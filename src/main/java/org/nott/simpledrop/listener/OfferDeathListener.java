@@ -55,13 +55,13 @@ public class OfferDeathListener implements Listener {
                     ps.setString(1, dead.getName());
                     ResultSet resultSet = ps.executeQuery();
                     int totalAmount = 0;
-                    if(!resultSet.next())return;
                     while (resultSet.next()) {
                         int amount = resultSet.getInt("amount");
                         totalAmount += amount;
                     }
                     int tax = SimpleDropPlugin.CONFIG_YML_FILE.getInt("offer.tax");
                     int reward = totalAmount - tax;
+                    if(reward <= 0)return;
                     if (SimpleDropPlugin.ECONOMY.depositPlayer(killer, reward).transactionSuccess()) {
                         ps = con.prepareStatement("delete from offer_info where id = ?");
                         ps.setString(1,dead.getName());

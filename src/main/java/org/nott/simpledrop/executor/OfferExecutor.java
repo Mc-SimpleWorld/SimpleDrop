@@ -73,7 +73,7 @@ public class OfferExecutor implements CommandExecutor {
                         String id = rs.getString("id");
                         int amount = rs.getInt("amount");
                         String msg = String.format(Objects.requireNonNull(SimpleDropPlugin.MESSAGE_YML_FILE.getString("offer.list_info")), id, amount);
-                        msg += ">>> ";
+                        msg = ">>> " + msg;
                         SwUtil.sendMessage2Sender(commandSender,
                                 msg,
                                 ChatColor.RED);
