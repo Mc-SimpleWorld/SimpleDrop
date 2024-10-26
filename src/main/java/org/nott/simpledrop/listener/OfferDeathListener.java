@@ -55,10 +55,12 @@ public class OfferDeathListener implements Listener {
                     ps.setString(1, dead.getName());
                     ResultSet resultSet = ps.executeQuery();
                     int totalAmount = 0;
-                    if(!resultSet.next())return;
                     while (resultSet.next()) {
                         int amount = resultSet.getInt("amount");
                         totalAmount += amount;
+                    }
+                    if(totalAmount == 0){
+                        return;
                     }
                     int tax = SimpleDropPlugin.CONFIG_YML_FILE.getInt("offer.tax");
                     int reward = totalAmount - tax;
