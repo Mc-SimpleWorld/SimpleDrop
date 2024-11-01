@@ -19,3 +19,11 @@ commands:
     description: '悬赏系统'
     usage: '未知命令,使用/<command> help 查看帮助'
     aliases: 'of'
+
+permissions:
+  simpledrop.admin:
+    default: op
+  offer.admin:
+    default: op
+  offer.player:
+    default: true
