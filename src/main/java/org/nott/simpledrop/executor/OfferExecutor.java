@@ -10,6 +10,7 @@ import org.bukkit.Server;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
 import org.nott.simpledrop.SimpleDropPlugin;
 import org.nott.simpledrop.manager.SqlLiteManager;
@@ -18,6 +19,7 @@ import org.nott.simpledrop.utils.SwUtil;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -27,7 +29,7 @@ import java.util.Objects;
  */
 
 @Data
-public class OfferExecutor implements CommandExecutor {
+public class OfferExecutor implements TabExecutor {
 
     private SimpleDropPlugin plugin;
 
@@ -311,5 +313,24 @@ public class OfferExecutor implements CommandExecutor {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public List<String> onTabComplete(CommandSender commandSender, Command command, String s, String[] args) {
+        if(args.length == 1){
+            return Arrays.asList("page","add","<玩家名称>");
+        }
+        if(args.length == 2){
+            String arg = args[1];
+            switch (arg){
+                default -> List.of("<金额>");
+                case "page" -> Arrays.asList("<页码>");
+                case "add" -> Arrays.asList("<已被悬赏玩家名称>");
+            }
+        }
+        if(args.length == 3){
+            return Arrays.asList("<金额>");
+        }
+        return null;
     }
 }
