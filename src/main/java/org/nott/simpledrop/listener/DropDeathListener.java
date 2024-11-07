@@ -129,17 +129,5 @@ public class DropDeathListener implements Listener {
         SwUtil.spigotTextMessage(entity.spigot()
                 , messageFile.getString(KeyWord.CONFIG.DROP_HEAD)
                 , ChatColor.RED);
-//        SimpleDropPlugin.SCHEDULER.runTaskAsynchronously(getPlugin(),()->{
-//            // Drop player's head
-//            ItemStack item = new ItemStack(Material.PLAYER_HEAD, 1);
-//            SkullMeta sm = (SkullMeta) item.getItemMeta();
-//            assert sm != null;
-//            sm.setOwningPlayer(entity);
-//            item.setItemMeta(sm);
-//            event.getDrops().add(item);
-//            SwUtil.spigotTextMessage(entity.spigot()
-//                    , messageFile.getString(KeyWord.CONFIG.DROP_HEAD)
-//                    , ChatColor.RED);
-//        });
     }
 }

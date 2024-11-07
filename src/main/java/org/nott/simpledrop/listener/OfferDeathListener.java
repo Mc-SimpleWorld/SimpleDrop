@@ -59,6 +59,9 @@ public class OfferDeathListener implements Listener {
                         int amount = resultSet.getInt("amount");
                         totalAmount += amount;
                     }
+                    if(totalAmount == 0){
+                        return;
+                    }
                     int tax = SimpleDropPlugin.CONFIG_YML_FILE.getInt("offer.tax");
                     int reward = totalAmount - tax;
                     if(reward <= 0)return;
