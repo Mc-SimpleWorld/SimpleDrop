@@ -58,7 +58,7 @@ public class SimpleDropExecutor implements TabExecutor {
 
     @Override
     public List<String> onTabComplete(CommandSender commandSender, Command command, String s, String[] args) {
-        if(args.length == 0 && Permissions.hasPermission(commandSender,"simpledrop.admin")){
+        if(args.length == 1 && Permissions.hasPermission(commandSender,"simpledrop.admin")){
             return Collections.singletonList("reload");
         }
         return null;

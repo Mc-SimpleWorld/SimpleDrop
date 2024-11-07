@@ -17,10 +17,8 @@ import org.nott.simpledrop.utils.SwUtil;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author Nott
@@ -280,15 +278,22 @@ public class OfferExecutor implements TabExecutor {
 
     @Override
     public List<String> onTabComplete(CommandSender commandSender, Command command, String label, String[] args) {
-        if(args.length == 0){
+        if(args.length == 1){
             if(commandSender.hasPermission("offer.player")){
-                return Arrays.asList("page","<玩家>","add");
+                List<String> suggestArg = new ArrayList<>();
+                List<String> otherArg = Arrays.asList("page", "add");
+                Collection<? extends Player> onlinePlayers = getPlugin().getServer().getOnlinePlayers();
+                if(!onlinePlayers.isEmpty()){
+                    otherArg.addAll(onlinePlayers.stream().map(Player::getName).toList());
+                }
+                suggestArg.addAll(otherArg);
+                return suggestArg;
             }
         }
-        if(args.length == 1){
+        if(args.length == 2){
             String arg = args[0];
             if(commandSender.hasPermission("offer.player")){
-                return Collections.singletonList("add".equals(arg) ? "<玩家>" : "<金额>");
+                return Collections.singletonList("add".equals(arg) ? "已被悬赏玩家名称" : "<金额>");
             }
         }
         return null;
